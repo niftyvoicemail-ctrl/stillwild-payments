@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Support Photo Blaster</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    background:#000;
+    color:#eee;
+    font-family:system-ui,Arial,sans-serif;
+    max-width:520px;
+    margin:90px auto;
+    padding:20px;
+    text-align:center;
+  }
+  .row {
+    display:inline-flex;
+    align-items:center;
+    gap:2px;
+    margin-top:10px;
+  }
+  .currency {
+    padding:6px 8px;
+    border:1px solid #666;
+    background:#222;
+  }
+  input {
+    width:70px;
+    padding:6px;
+    font-size:1.05rem;
+    border:1px solid #666;
+  }
+  button {
+    margin-top:22px;
+    width:100%;
+    padding:12px;
+    background:#f0a000;
+    border:none;
+    cursor:pointer;
+  }
+  .note { margin-top:10px; font-size:.8rem; opacity:.6; }
+</style>
+</head>
+
+<body>
+
+<h1>Support Photo Blaster</h1>
+<p>If you’d like to throw a small tip into the jar.</p>
+
+<div class="row">
+  <span class="currency">$</span>
+  <input id="tip" type="number" min="1" max="100" step="1" value="2">
+</div>
+
+<button onclick="goPay()">Continue to Payment</button>
+<div class="note">Stripe checkout opens next.</div>
+
+<script>
+function goPay() {
+  const amt = Math.min(100, Math.max(1, Math.round(tip.value || 2)));
+  window.location.href =
+    `https://payments.stillwild.land/?src=rmg&qty=${amt}`;
+}
+</script>
+
+</body>
+</html>

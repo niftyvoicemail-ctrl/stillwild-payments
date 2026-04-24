@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Secure Checkout</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    background:#000;
+    color:#eee;
+    font-family:system-ui,Arial,sans-serif;
+    max-width:520px;
+    margin:100px auto;
+    padding:20px;
+    text-align:center;
+  }
+  a.button {
+    display:block;
+    margin:18px 0;
+    padding:12px;
+    background:#f0a000;
+    color:#000;
+    font-weight:bold;
+    text-decoration:none;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Secure Checkout</h1>
+<p>You will be redirected to Stripe to complete your payment.</p>
+
+<div id="actions"></div>
+
+<script>
+const q = new URLSearchParams(location.search);
+const src = q.get("src");
+const out = document.getElementById("actions");
+
+if (src === "rmg") {
+  const qty = q.get("qty") || 1;
+  out.innerHTML = `
+    stripe.com/pay/RMG_TIP_PRICE_ID?quantity=${qty}
+      Complete Tip ($${qty})
+    </a>`;
+}
+
+if (src === "cbb") {
+  const n = q.get("n") || 1;
+  const deck = q.get("deck") || 0;
+  const tent = q.get("tent") || 0;
+
+  out.innerHTML = `
+    ${deck > 0 ? `
+      stripe.com/pay/CBB_DECK_PRICE_ID?quantity=${deck*n}
+        Pay Deck (${n} nights)
+    </a>` : ``}
+
+    ${tent > 0 ? `
+      stripe.com/pay/CBB_TENT_PRICE_ID?quantity=${tent*n}
+        Pay Tent Sites (${tent} × ${n} nights)
+    </a>` : ``}
+  `;
+}
+</script>
+
+</body>
+</html>

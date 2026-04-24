@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Camp Babbling Brook — Payments</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    background:#000;
+    color:#eee;
+    font-family:system-ui,Arial,sans-serif;
+    max-width:540px;
+    margin:80px auto;
+    padding:20px;
+  }
+  label {
+    display:block;
+    margin-top:14px;
+    font-size:.85rem;
+  }
+  input[type=number] {
+    width:80px;
+    padding:6px;
+    margin-top:4px;
+    font-size:1rem;
+  }
+  .row { margin-top:10px; }
+  .checkbox { margin-top:18px; font-size:.85rem; }
+  .summary { margin-top:16px; font-size:.9rem; }
+  button {
+    margin-top:22px;
+    width:100%;
+    padding:12px;
+    background:#f0a000;
+    border:none;
+    cursor:pointer;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Campground Charges</h1>
+
+<div class="row">
+  <label>Number of nights</label>
+  <input id="nights" type="number" min="1" value="1">
+</div>
+
+<div class="row">
+  <label>10′×10′ deck — $60/night (max 1)</label>
+  <input id="deck" type="number" min="0" max="1" value="0">
+</div>
+
+<div class="row">
+  <label>Tent sites — $30/night each (max 5)</label>
+  <input id="tents" type="number" min="0" max="5" value="0">
+</div>
+
+<div class="checkbox">
+  <input id="clean" type="checkbox">
+  I understand excessive cleanup may be billed later at $100/hour (1‑hour minimum)
+</div>
+
+<div class="summary" id="summary"></div>
+
+<button onclick="goPay()">Proceed to Payment</button>
+
+<script>
+function clamp(el) {
+  const min = Number(el.min);
+  const max = Number(el.max);
+  el.value = Math.min(max, Math.max(min, Number(el.value || min)));
+}
+
+function updateSummary() {
+  clamp(deck); clamp(tents);
+  const n = Number(nights.value || 1);
+  const deckCost = deck.value * n * 60;
+  const tentCost = tents.value * n * 30;
+  summary.textContent =
+    `Estimated subtotal: $${(deckCost + tentCost).toFixed(2)} (tax shown at checkout)`;
+}
+
+[nights, deck, tents].forEach(i => i.oninput = updateSummary);
+updateSummary();
+
+function goPay() {
+  if (!clean.checked) {
+    alert("You must acknowledge the cleanup agreement.");
+    return;
+  }
+  if (deck.value == 0 && tents.value == 0) {
+    alert("Please select at least one item.");
+    return;
+  }
+  window.location.href =
+    `https://payments.stillwild.land/?src=cbb&n=${nights.value}&deck=${deck.value}&tent=${tents.value}`;
+}
+</script>
+
+</body>
+</html>
